@@ -241,12 +241,14 @@
       cursor: pointer;
     }
 
-    #tituloInput, #subtituloInput {
+    #tituloInput,
+    #subtituloInput {
       font-size: 18px;
       height: 80px;
     }
 
-    #notaCeutaMelillaInput, #fuenteInput{
+    #notaCeutaMelillaInput,
+    #fuenteInput {
       font-size: 18px;
     }
 
@@ -299,7 +301,8 @@
   <div id="paneles-textos">
     <div class="sec-panel">
       <label for="tituloInput">Título </label>
-      <textarea id="tituloInput" rows="2" cols="30">Ejemplo: Variación anual del número de XX en MES de AÑO, por comunidades autónomas</textarea>
+      <textarea id="tituloInput" rows="2"
+        cols="30">Ejemplo: Variación anual del número de XX en MES de AÑO, por comunidades autónomas</textarea>
     </div>
     <div class="sec-panel">
       <label for="subtituloInput">Subtítulo </label>
@@ -387,7 +390,7 @@
           <polyline id="linea-canarias" class="linea-svg-canarias" points="1012.8 1537.4 1012.8 1206.3 1709.8 1206.3" />
           <rect id="ceuta" class="poligono-svg-ccaa" x="485.5" y="1363" width="52.8" height="52.8" />
           <rect id="melilla" class="poligono-svg-ccaa" x="742.5" y="1471" width="52.8" height="52.8" />
-          
+
         </svg>
       </div>
       <div id="div-tabla">
@@ -455,162 +458,169 @@
     let valores = []; // Mover esto FUERA de processCSV para que sea accesible globalmente
 
     function processCSV(text) {
-  const lines = text.trim().split('\n');
+      const lines = text.trim().split('\n');
 
-  const regionNames = {
-    'dato-andalucia': ['Andalucía', '01 Andalucía', 'Andalucia', 'Andaluc�a'],
-    'dato-aragon': ['Aragón', '02 Aragón', 'Arag�n'],
-    'dato-asturias': ['Asturias, Principado de', 'Asturias', '03 Asturias, Principado de'],
-    'dato-baleares': ['Balears, Illes', 'Baleares', '04 Balears, Illes'],
-    'dato-canarias': ['Canarias', '05 Canarias'],
-    'dato-cantabria': ['Cantabria', '06 Cantabria'],
-    'dato-cyl': ['Castilla y León', 'CyL', '07 Castilla y León', 'Castilla y Le�n'],
-    'dato-clm': ['Castilla - La Mancha', 'C-LM', 'Castilla-La Mancha', '08 Castilla - La Mancha'],
-    'dato-cataluna': ['Cataluña', 'Catalunya', '09 Cataluña', 'Catalu�a'],
-    'dato-c-valenciana': ['Comunitat Valenciana', 'C. Valenciana', 'Valencia', '10 Comunitat Valenciana'],
-    'dato-extremadura': ['Extremadura', '11 Extremadura'],
-    'dato-galicia': ['Galicia', '12 Galicia'],
-    'dato-madrid': ['Madrid, Comunidad de', 'Madrid', '13 Madrid, Comunidad de'],
-    'dato-murcia': ['Murcia, Región de', 'Murcia', '14 Murcia, Región de', 'Murcia, Regi�n de'],
-    'dato-navarra': ['Navarra, Comunidad Foral de', 'Navarra', '15 Navarra, Comunidad Foral de'],
-    'dato-rioja': ['Rioja, La', 'La Rioja', '17 Rioja, La'],
-    'dato-pais-vasco': ['País Vasco', '16 País Vasco', 'Pa�s Vasco'],
-    'dato-ceuta': ['Ceuta', '18 Ceuta'],
-    'dato-melilla': ['Melilla', '19 Melilla'],
-    'dato-espana': ['España', 'ESPAÑA', 'TOTAL', 'NACIONAL']
-  };
+      const regionNames = {
+        'dato-andalucia': ['Andalucía', '01 Andalucía', 'Andalucia', 'Andaluc�a'],
+        'dato-aragon': ['Aragón', '02 Aragón', 'Arag�n'],
+        'dato-asturias': ['Asturias, Principado de', 'Asturias', '03 Asturias, Principado de'],
+        'dato-baleares': ['Balears, Illes', 'Baleares', '04 Balears, Illes'],
+        'dato-canarias': ['Canarias', '05 Canarias'],
+        'dato-cantabria': ['Cantabria', '06 Cantabria'],
+        'dato-cyl': ['Castilla y León', 'CyL', '07 Castilla y León', 'Castilla y Le�n'],
+        'dato-clm': ['Castilla - La Mancha', 'C-LM', 'Castilla-La Mancha', '08 Castilla - La Mancha'],
+        'dato-cataluna': ['Cataluña', 'Catalunya', '09 Cataluña', 'Catalu�a'],
+        'dato-c-valenciana': ['Comunitat Valenciana', 'C. Valenciana', 'Valencia', '10 Comunitat Valenciana'],
+        'dato-extremadura': ['Extremadura', '11 Extremadura'],
+        'dato-galicia': ['Galicia', '12 Galicia'],
+        'dato-madrid': ['Madrid, Comunidad de', 'Madrid', '13 Madrid, Comunidad de'],
+        'dato-murcia': ['Murcia, Región de', 'Murcia', '14 Murcia, Región de', 'Murcia, Regi�n de'],
+        'dato-navarra': ['Navarra, Comunidad Foral de', 'Navarra', '15 Navarra, Comunidad Foral de'],
+        'dato-rioja': ['Rioja, La', 'La Rioja', '17 Rioja, La'],
+        'dato-pais-vasco': ['País Vasco', '16 País Vasco', 'Pa�s Vasco'],
+        'dato-ceuta': ['Ceuta', '18 Ceuta'],
+        'dato-melilla': ['Melilla', '19 Melilla'],
+        'dato-espana': ['España', 'ESPAÑA', 'TOTAL', 'NACIONAL']
+      };
 
-  // Crear un mapa inverso para buscar el ID de la región a partir de cualquier nombre
-  const regionMap = {};
-  for (const [regionId, names] of Object.entries(regionNames)) {
-    for (const name of names) {
-      regionMap[normalizeString(name)] = regionId;
-    }
-  }
-
-  valores = []; // Reiniciar al cargar nuevo CSV
-
-  let ceutaData = false;
-  let melillaData = false;
-
-// Buscar las columnas de regiones y valores
-let regionColumnIndex = 0; // La columna de regiones es la primera
-let valueColumnIndex = 1; // La columna de valores es la segunda
-
-const headers = lines[0].split(';').map(s => s.trim()); // Usar la primera línea para los encabezados
-for (let i = 0; i < headers.length; i++) {
-  const normalizedHeader = normalizeString(headers[i]);
-  if (regionColumnIndex === -1 && Object.keys(regionMap).some(name => normalizedHeader.includes(name))) {
-    regionColumnIndex = i;
-    valueColumnIndex = i + 1; // La columna de valores está inmediatamente a la derecha
-    break;
-  }
-}
-
-if (regionColumnIndex === -1 || valueColumnIndex === -1) {
-  alert('No se encontraron las columnas de regiones y valores.');
-  return;
-}
-
-for (let i = 0; i < lines.length; i++) { // Comenzar desde la primera línea
-  const line = lines[i].split(';').map(s => s.trim());
-  const regionName = line[regionColumnIndex];
-  const valueRaw = line[valueColumnIndex];
-
-  if (!regionName || !valueRaw) continue;
-
-
-  const regionId = findRegionId(normalizeString(regionName), regionMap);
-  const valueNum = parseFloat(valueRaw.replace(',', '.')); // Asegurar parse correcto con coma
-
-  if (!regionId || isNaN(valueNum)) continue;
-
-  if (regionId === 'dato-ceuta') ceutaData = true;
-  if (regionId === 'dato-melilla') melillaData = true;
-
-  valores.push({
-    regionId,
-    valueNum
-  });
-}
-
-  // Oculta todas las filas
-  document.querySelectorAll('[id^="nom-"], [id^="dato-"]').forEach(el => {
-    el.style.display = 'none';
-  });
-
-  // Oculta la nota de Ceuta y Melilla por defecto
-  document.getElementById('nota-ceuta-melilla').style.display = 'none';
-
-  // Ordenar
-  valores.sort((a, b) => b.valueNum - a.valueNum);
-
-  // Mostrar
-  const colNom = document.getElementById('columna-region-nom');
-  const colDato = document.getElementById('columna-region-datos');
-
-  const toggleChecked = document.getElementById('toggleSymbols').checked;
-
-  valores.forEach(({ regionId, valueNum }) => {
-    const nomId = 'nom-' + regionId.replace('dato-', '');
-    const nomEl = document.getElementById(nomId);
-    const datoEl = document.getElementById(regionId);
-    const regionEl = document.getElementById(regionId.replace('dato-', ''));
-
-    if (nomEl && datoEl) {
-      nomEl.style.display = 'flex';
-      datoEl.style.display = 'flex';
-
-      let displayValue = valueNum.toFixed(1).replace('.', ',');
-      if (toggleChecked) {
-        displayValue = (valueNum > 0 ? '+' : '') + displayValue + '%';
+      // Crear un mapa inverso para buscar el ID de la región a partir de cualquier nombre
+      const regionMap = {};
+      for (const [regionId, names] of Object.entries(regionNames)) {
+        for (const name of names) {
+          regionMap[normalizeString(name)] = regionId;
+        }
       }
 
-      datoEl.textContent = displayValue;
+      valores = []; // Reiniciar al cargar nuevo CSV
 
-      // Colorear el mapa en gris claro
-      const color = '#d3d3d3'; // Gris claro
-      if (regionEl) {
-  if (regionEl.tagName === 'g') {
-    regionEl.querySelectorAll('*').forEach(el => el.style.fill = color);
-  } else if (regionEl.tagName === 'rect' || regionEl.tagName === 'polygon' || regionEl.tagName === 'path') {
-    regionEl.style.fill = color;
-  }
-}
+      let ceutaData = false;
+      let melillaData = false;
 
-      datoEl.style.backgroundColor = color;
-      datoEl.style.textAlign = 'center';
-      colNom.appendChild(nomEl);
-      colDato.appendChild(datoEl);
+      // Buscar las columnas de regiones y valores
+      let regionColumnIndex = 0; // La columna de regiones es la primera
+      let valueColumnIndex = 1; // La columna de valores es la segunda
+
+      const headers = lines[0].split(';').map(s => s.trim()); // Usar la primera línea para los encabezados
+      for (let i = 0; i < headers.length; i++) {
+        const normalizedHeader = normalizeString(headers[i]);
+        if (regionColumnIndex === -1 && Object.keys(regionMap).some(name => normalizedHeader.includes(name))) {
+          regionColumnIndex = i;
+          valueColumnIndex = i + 1; // La columna de valores está inmediatamente a la derecha
+          break;
+        }
+      }
+
+      if (regionColumnIndex === -1 || valueColumnIndex === -1) {
+        alert('No se encontraron las columnas de regiones y valores.');
+        return;
+      }
+
+      for (let i = 0; i < lines.length; i++) { // Comenzar desde la primera línea
+        const line = lines[i].split(';').map(s => s.trim());
+        const regionName = line[regionColumnIndex];
+        const valueRaw = line[valueColumnIndex];
+
+        if (!regionName || !valueRaw) continue;
+
+
+        const regionId = findRegionId(normalizeString(regionName), regionMap);
+        const valueNum = parseFloat(valueRaw.replace(',', '.')); // Asegurar parse correcto con coma
+
+        if (!regionId || isNaN(valueNum)) continue;
+
+        if (regionId === 'dato-ceuta') ceutaData = true;
+        if (regionId === 'dato-melilla') melillaData = true;
+
+        valores.push({
+          regionId,
+          valueNum
+        });
+      }
+
+      // Oculta todas las filas
+      document.querySelectorAll('[id^="nom-"], [id^="dato-"]').forEach(el => {
+        el.style.display = 'none';
+      });
+
+      // Oculta la nota de Ceuta y Melilla por defecto
+      document.getElementById('nota-ceuta-melilla').style.display = 'none';
+
+      // Ordenar
+      valores.sort((a, b) => b.valueNum - a.valueNum);
+
+      // Mostrar
+      const colNom = document.getElementById('columna-region-nom');
+      const colDato = document.getElementById('columna-region-datos');
+
+      const toggleChecked = document.getElementById('toggleSymbols').checked;
+
+      valores.forEach(({ regionId, valueNum }) => {
+        const nomId = 'nom-' + regionId.replace('dato-', '');
+        const nomEl = document.getElementById(nomId);
+        const datoEl = document.getElementById(regionId);
+        const regionEl = document.getElementById(regionId.replace('dato-', ''));
+
+        if (nomEl && datoEl) {
+          nomEl.style.display = 'flex';
+          datoEl.style.display = 'flex';
+
+          let displayValue = valueNum.toFixed(1).replace('.', ',');
+          if (toggleChecked) {
+            displayValue = (valueNum > 0 ? '+' : '') + displayValue + '%';
+          }
+
+          datoEl.textContent = displayValue;
+
+          // Colorear el mapa en gris claro
+          const color = '#d3d3d3'; // Gris claro
+          if (regionEl) {
+            if (regionEl.tagName === 'g') {
+              regionEl.querySelectorAll('*').forEach(el => el.style.fill = color);
+            } else if (regionEl.tagName === 'rect' || regionEl.tagName === 'polygon' || regionEl.tagName === 'path') {
+              regionEl.style.fill = color;
+            }
+          }
+
+          datoEl.style.backgroundColor = color;
+          datoEl.style.textAlign = 'center';
+          colNom.appendChild(nomEl);
+          colDato.appendChild(datoEl);
+        }
+      });
+
+      // Mostrar la nota si no hay datos para Ceuta y Melilla
+      if (!ceutaData && !melillaData) {
+        document.getElementById('nota-ceuta-melilla').style.display = 'block';
+      }
     }
-  });
-
-  // Mostrar la nota si no hay datos para Ceuta y Melilla
-  if (!ceutaData && !melillaData) {
-    document.getElementById('nota-ceuta-melilla').style.display = 'block';
-  }
-}
 
     // Función para encontrar el ID de la región a partir de un nombre parcial
     function findRegionId(regionName, regionMap) {
-  for (const [name, id] of Object.entries(regionMap)) {
-    if (regionName.includes(name)) {
-      return id;
+      for (const [name, id] of Object.entries(regionMap)) {
+        if (regionName.includes(name)) {
+          return id;
+        }
+      }
+      return null;
     }
-  }
-  return null;
-}
 
-// Función para normalizar cadenas
-function normalizeString(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-}
-    
+    // Función para normalizar cadenas
+    function normalizeString(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
     // === GENERAR SUGERENCIAS DE ESCALAS DIDÁCTICAS ===
-    const sugerenciasDiv = document.getElementById('sugerencias-color');
-    const selector = document.getElementById('selectorSugerencias') || document.createElement('select');
+    function generarSugerencias(valores) {
+      if (valores.length === 0) return;
 
-    if (valores.length > 0) {
+      const sugerenciasDiv = document.getElementById('sugerencias-color');
+      let selector = document.getElementById('selectorSugerencias');
+      if (!selector) {
+        selector = document.createElement('select');
+        selector.id = 'selectorSugerencias';
+        sugerenciasDiv.before(selector);
+      }
+
       const nums = valores.map(d => d.valueNum).sort((a, b) => a - b);
       const min = nums[0];
       const max = nums[nums.length - 1];
@@ -646,9 +656,11 @@ function normalizeString(str) {
         );
         return [...new Set([min, 0, ...breaks, max])];
       }
+
       const hayPositivos = nums.some(n => n > 0);
       const hayNegativos = nums.some(n => n < 0);
       const mezclaSignos = hayPositivos && hayNegativos;
+
       const cortes = {
         'intervalos': {
           titulo: 'Intervalos iguales',
@@ -690,8 +702,7 @@ function normalizeString(str) {
         }
       };
 
-      // Crear selector si no existe
-      selector.id = 'selectorSugerencias';
+      // Rellenar el selector
       selector.innerHTML = '';
       for (const clave in cortes) {
         const opt = document.createElement('option');
@@ -700,15 +711,11 @@ function normalizeString(str) {
         selector.appendChild(opt);
       }
 
-      // Insertar selector y contenedor si aún no están
-      if (!document.getElementById('selectorSugerencias')) {
-        sugerenciasDiv.before(selector);
-      }
-
-      // Función para renderizar el bloque explicativo
       function renderSugerencia(tipo) {
         const c = cortes[tipo];
-        const tramos = c.valores.map((v, i) => i < c.valores.length - 1 ? `${v} – ${c.valores[i + 1]}` : '').filter(Boolean).join('<br>');
+        const tramos = c.valores.map((v, i) =>
+          i < c.valores.length - 1 ? `${v} – ${c.valores[i + 1]}` : ''
+        ).filter(Boolean).join('<br>');
         sugerenciasDiv.innerHTML = `
       <div class="sugerencia-color">
         <h4 class="titulo-sugerencia">${c.titulo}</h4>
@@ -720,13 +727,13 @@ function normalizeString(str) {
     `;
       }
 
-      // Mostrar por defecto
+      // Mostrar la sugerencia inicial
       renderSugerencia(selector.value);
       selector.onchange = () => renderSugerencia(selector.value);
     }
 
 
-    
+
 
 
     function setMapToGray() {
@@ -794,6 +801,7 @@ function normalizeString(str) {
 
       // Disparar el evento para mostrar los inputs de las escalas de color al cargar la página
       document.getElementById('colorScales').dispatchEvent(new Event('input'));
+      generarSugerencias(valores);
     }
 
     function updateColors() {
